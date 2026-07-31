@@ -16,8 +16,7 @@
 
 A Home Assistant custom integration that turns the current location of a person
 into travel context: weather, air quality, sea conditions, public holidays,
-exchange rate, travel advisory, earthquakes and country facts — plus a single
-sensor telling you whether everything back home is still fine.
+exchange rate, travel advisory, earthquakes and country facts.
 
 All data sources are free and need **no API key**. The UI is available in
 English and German.

@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+from zoneinfo import ZoneInfo
+
 from freezegun.api import FrozenDateTimeFactory
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 import pytest
 from pytest_homeassistant_custom_component.common import (
     MockConfigEntry,
@@ -12,6 +16,7 @@ from pytest_homeassistant_custom_component.common import (
 )
 
 PREFIX = "vacation_mode_traveller"
+DESTINATION_TZ = ZoneInfo("Asia/Bangkok")
 
 
 @pytest.mark.usefixtures("setup_integration")
@@ -49,22 +54,31 @@ async def test_local_time_sensor(
     # The name follows the place the traveller is in.
     assert state.attributes["friendly_name"].endswith("Local time Phuket")
 
-    freezer.move_to("2026-07-31T12:35:00+00:00")
-    async_fire_time_changed(hass)
+    # async_fire_time_changed only forces a pending real-clock timer to run
+    # early when the target is genuinely ahead of actual wall-clock time, so
+    # the freeze target must be relative to "now" rather than a hardcoded
+    # date, which would stop working as soon as that instant is in the past.
+    target = dt_util.utcnow() + timedelta(minutes=5)
+    freezer.move_to(target)
+    async_fire_time_changed(hass, target)
     await hass.async_block_till_done()
 
+    destination = target.astimezone(DESTINATION_TZ)
     state = hass.states.get(entity_id)
-    assert state.state == "19:35"
-    assert state.attributes["date"] == "2026-07-31"
-    assert state.attributes["utc_offset"] == "+0700"
+    assert state.state == destination.strftime("%H:%M")
+    assert state.attributes["date"] == destination.date().isoformat()
+    assert state.attributes["utc_offset"] == destination.strftime("%z")
     assert state.attributes["location"] == "Phuket"
 
     # A minute later without any coordinator refresh.
-    freezer.move_to("2026-07-31T12:36:00+00:00")
-    async_fire_time_changed(hass)
+    target += timedelta(minutes=1)
+    freezer.move_to(target)
+    async_fire_time_changed(hass, target)
     await hass.async_block_till_done()
 
-    assert hass.states.get(entity_id).state == "19:36"
+    assert hass.states.get(entity_id).state == target.astimezone(
+        DESTINATION_TZ
+    ).strftime("%H:%M")
 
 
 async def test_local_time_name_follows_the_traveller(
