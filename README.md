@@ -126,14 +126,14 @@ country page on auswaertiges-amt.de.
 ### Country facts
 
 `custom_components/vacation_mode/data/countries.yaml` holds the emergency
-numbers, plug types, mains voltage and a tap water rating for roughly 80
-countries. Sources are documented at the top of that file. To add a country,
-copy an existing block and keep the key order:
+numbers, plug types, mains voltage and a tap water rating for 244 countries and
+territories. Sources are documented at the top of that file. Each block looks
+like this:
 
 ```yaml
-PT:
-  name_en: Portugal
-  name_de: Portugal
+"PT":
+  name_en: "Portugal"
+  name_de: "Portugal"
   iso3: PRT
   currency: EUR
   emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
@@ -143,8 +143,19 @@ PT:
   tap_water: safe   # safe | caution | unsafe
 ```
 
-The `tap_water` rating is a coarse country level hint, not a guarantee for a
-specific tap. Pull requests that correct or extend the file are welcome.
+The file is generated, so corrections belong in the generator rather than in the
+YAML:
+
+```bash
+python scripts/update_countries.py
+```
+
+It downloads the country list, emergency numbers, mains electricity data and the
+World Bank drinking water indicator, then rewrites the file. Emergency numbers
+and tap water ratings that have been reviewed by hand live in `EMERGENCY` and
+`TAP_WATER` inside the script and are never overwritten by the online sources —
+fix them there. The `tap_water` rating is a coarse country level hint, not a
+guarantee for a specific tap. Pull requests that correct the data are welcome.
 
 ## Development
 
