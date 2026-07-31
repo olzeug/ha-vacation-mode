@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/icon.png" alt="Vacation Mode" width="120">
+<img src="custom_components/vacation_mode/brand/icon.png" alt="Vacation Mode" width="120">
 
 <h1>Vacation Mode</h1>
 
@@ -210,17 +210,14 @@ real API.
 
 ### Brand icon
 
-Home Assistant does not load integration icons from `custom_components/`. It
-resolves them against [brands.home-assistant.io](https://brands.home-assistant.io/),
-so the icon only shows up in the UI once it is merged into the
-[home-assistant/brands](https://github.com/home-assistant/brands) repository as:
+Starting with Home Assistant 2026.3, custom integrations can include their own brand images (icons and logos) directly in the integration directory.
 
 ```text
-custom_integrations/vacation_mode/icon.png      # 256x256
-custom_integrations/vacation_mode/icon@2x.png   # 512x512
+custom_components/vacation_mode/brand/icon.png      # 256x256
+custom_components/vacation_mode/brand/icon@2x.png   # 512x512
 ```
 
-`assets/icon.png` and `assets/icon@2x.png` are those files — square, trimmed of
+`custom_components/vacation_mode/brand/icon.png` and `custom_components/vacation_mode/brand/icon@2x.png` are those files — square, trimmed of
 empty edges and readable on both the light and the dark theme. No `logo.png` is
 supplied: the mark carries no wordmark, and Home Assistant falls back to the
 icon wherever a logo would be used.
