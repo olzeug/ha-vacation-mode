@@ -36,7 +36,7 @@ URLS = {
     "holidays_next": re.compile(
         r"^https://date\.nager\.at/api/v3/PublicHolidays/2027/TH.*"
     ),
-    "currency": re.compile(r"^https://api\.frankfurter\.app/latest.*"),
+    "currency": re.compile(r"^https://open\.er-api\.com/v6/latest.*"),
     "advisory_article": re.compile(
         r"^https://www\.auswaertiges-amt\.de/opendata/travelwarning/\d+.*"
     ),

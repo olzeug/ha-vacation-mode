@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta, timezone
 import html
 import logging
 import re
@@ -42,7 +42,7 @@ AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
 MARINE_URL = "https://marine-api.open-meteo.com/v1/marine"
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/reverse"
 NAGER_URL = "https://date.nager.at/api/v3/PublicHolidays"
-FRANKFURTER_URL = "https://api.frankfurter.app/latest"
+EXCHANGE_RATE_URL = "https://open.er-api.com/v6/latest"
 TRAVEL_ADVICE_URL = "https://www.auswaertiges-amt.de/opendata/travelwarning"
 TRAVEL_ADVICE_PAGE_URL = "https://www.auswaertiges-amt.de/de/ReiseUndSicherheit"
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
@@ -408,18 +408,23 @@ async def async_get_holidays(
 async def async_get_exchange_rate(
     session: ClientSession, base: str, target: str
 ) -> CurrencyInfo:
-    """Fetch the exchange rate between two currencies from frankfurter.app."""
+    """Fetch the exchange rate between two currencies from open.er-api.com."""
     if base == target:
         return CurrencyInfo(base=base, target=target, rate=1.0, day=None)
 
-    payload = await _fetch_json(session, FRANKFURTER_URL, {"from": base, "to": target})
+    payload = await _fetch_json(session, f"{EXCHANGE_RATE_URL}/{base}")
     rates = payload.get("rates") if isinstance(payload, dict) else None
-    if not isinstance(rates, dict) or target not in rates:
+    if (
+        not isinstance(payload, dict)
+        or payload.get("result") != "success"
+        or not isinstance(rates, dict)
+        or target not in rates
+    ):
         raise VacationModeApiError(f"No exchange rate for {base}/{target}")
 
     try:
-        day = date.fromisoformat(payload["date"])
-    except (KeyError, TypeError, ValueError):
+        day = datetime.fromtimestamp(payload["time_last_update_unix"], tz=UTC).date()
+    except (KeyError, TypeError, ValueError, OSError):
         day = None
     return CurrencyInfo(base=base, target=target, rate=float(rates[target]), day=day)
 

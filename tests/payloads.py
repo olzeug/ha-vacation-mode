@@ -148,9 +148,9 @@ HOLIDAYS_NEXT_YEAR: list[dict[str, Any]] = [
 ]
 
 EXCHANGE_RATE: dict[str, Any] = {
-    "amount": 1.0,
-    "base": "EUR",
-    "date": "2026-07-30",
+    "result": "success",
+    "base_code": "EUR",
+    "time_last_update_unix": 1785369600,
     "rates": {"THB": 37.842},
 }
 

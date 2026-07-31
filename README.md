@@ -40,7 +40,7 @@ The entity name is prefixed with the device name, e.g.
 | `sensor.*_distance_from_home` | always on | `zone.home`, no network access |
 | `sensor.*_next_public_holiday`, `_next_public_holiday_on` (date, days until) | Holidays | Nager.Date |
 | `binary_sensor.*_public_holiday_today` | Holidays | Nager.Date |
-| `sensor.*_exchange_rate` | Currency | Frankfurter |
+| `sensor.*_exchange_rate` | Currency | ExchangeRate-API |
 | `sensor.*_travel_advisory`, `binary_sensor.*_travel_warning` (summary and link in the attributes) | Travel advisory | Auswärtiges Amt |
 | `sensor.*_earthquakes_7_days`, `_strongest_earthquake` | Earthquakes | USGS |
 | `sensor.*_emergency_number`, `_plug_type`, `binary_sensor.*_tap_water` | Country facts | bundled data file |
@@ -141,7 +141,7 @@ what the 30 minute poll is for.
 | [Open-Meteo](https://open-meteo.com/) | Weather, air quality, pollen, marine | CC BY 4.0, free for non-commercial use |
 | [Nominatim / OpenStreetMap](https://nominatim.org/) | Country and city of the current position | ODbL, © OpenStreetMap contributors |
 | [Nager.Date](https://date.nager.at/) | Public holidays | free, ~110 countries |
-| [Frankfurter](https://frankfurter.dev/) | Exchange rates | European Central Bank reference rates |
+| [ExchangeRate-API](https://www.exchangerate-api.com/docs/free) | Exchange rates | free, no key, ~160 currencies |
 | [Auswärtiges Amt](https://www.auswaertiges-amt.de/de/ReiseUndSicherheit/reise-und-sicherheitshinweise) | Travel advisories | German Federal Foreign Office open data |
 | [USGS](https://earthquake.usgs.gov/fdsnws/event/1/) | Earthquakes within 500 km, last 7 days | public domain |
 
