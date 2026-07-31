@@ -36,16 +36,11 @@ async def test_weather_sensors(hass: HomeAssistant) -> None:
     assert difference.attributes["utc_offset_seconds"] == 25200
 
 
-@pytest.mark.usefixtures("set_states", "mock_sources")
+@pytest.mark.usefixtures("setup_integration")
 async def test_local_time_sensor(
-    hass: HomeAssistant, freezer: FrozenDateTimeFactory, config_entry: MockConfigEntry
+    hass: HomeAssistant, freezer: FrozenDateTimeFactory
 ) -> None:
     """The clock of the destination ticks on its own, once a minute."""
-    freezer.move_to("2026-07-31T12:35:00+00:00")
-    config_entry.add_to_hass(hass)
-    assert await hass.config_entries.async_setup(config_entry.entry_id)
-    await hass.async_block_till_done()
-
     entity_id = f"sensor.{PREFIX}_local_time"
 
     state = hass.states.get(entity_id)
@@ -54,6 +49,11 @@ async def test_local_time_sensor(
     # The name follows the place the traveller is in.
     assert state.attributes["friendly_name"].endswith("Local time Phuket")
 
+    freezer.move_to("2026-07-31T12:35:00+00:00")
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(entity_id)
     assert state.state == "19:35"
     assert state.attributes["date"] == "2026-07-31"
     assert state.attributes["utc_offset"] == "+0700"

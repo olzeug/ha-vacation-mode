@@ -22,6 +22,7 @@ jobs:
   lint:
     name: Ruff
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Check out the repository
         uses: actions/checkout@v5
@@ -43,6 +44,7 @@ jobs:
   test:
     name: Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
