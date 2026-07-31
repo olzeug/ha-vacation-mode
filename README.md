@@ -190,3 +190,7 @@ custom_integrations/vacation_mode/icon@2x.png   # 512x512
 empty edges and readable on both the light and the dark theme. No `logo.png` is
 supplied: the mark carries no wordmark, and Home Assistant falls back to the
 icon wherever a logo would be used.
+
+## License
+
+Released under the [MIT License](LICENSE).
