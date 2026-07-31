@@ -99,6 +99,24 @@ Besides the advisory level, the sensor and the binary sensor carry a `summary`
 `last_changes` (what the Foreign Office edited last) and a `url` pointing to the
 country page on auswaertiges-amt.de.
 
+## Actions
+
+### `vacation_mode.refresh`
+
+Fetches every enabled source again, ignoring the cached results and their TTLs
+— useful when a value went unavailable and you do not want to wait for the next
+poll or cache expiry.
+
+```yaml
+action: vacation_mode.refresh
+target:
+  device_id: 1a2b3c4d5e6f7890abcdef1234567890
+```
+
+Without a target every loaded Vacation Mode entry is refreshed. Because the
+action also re-runs reverse geocoding, do not call it on a schedule — that is
+what the 30 minute poll is for.
+
 ## How polling works
 
 - The coordinator polls every 30 minutes.

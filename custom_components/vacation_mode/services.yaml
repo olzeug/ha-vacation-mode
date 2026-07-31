@@ -1,0 +1,6 @@
+refresh:
+  target:
+    device:
+      integration: vacation_mode
+    entity:
+      integration: vacation_mode

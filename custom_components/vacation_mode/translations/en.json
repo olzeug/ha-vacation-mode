@@ -50,6 +50,20 @@
       }
     }
   },
+  "services": {
+    "refresh": {
+      "name": "Refresh",
+      "description": "Fetches all data sources again, ignoring the cached results. Without a target every Vacation Mode entry is refreshed."
+    }
+  },
+  "exceptions": {
+    "no_loaded_entry": {
+      "message": "No Vacation Mode entry is loaded."
+    },
+    "no_target_match": {
+      "message": "The selected target does not belong to a loaded Vacation Mode entry."
+    }
+  },
   "entity": {
     "sensor": {
       "distance_home": { "name": "Distance from home" },

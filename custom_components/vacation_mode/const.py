@@ -11,6 +11,8 @@ MANUFACTURER: Final = "Vacation Mode"
 DEFAULT_SCAN_INTERVAL: Final = timedelta(minutes=30)
 REQUEST_TIMEOUT: Final = 20
 
+SERVICE_REFRESH: Final = "refresh"
+
 CONF_PERSON_ENTITY: Final = "person_entity"
 CONF_HOME_CURRENCY: Final = "home_currency"
 CONF_MODULES: Final = "modules"

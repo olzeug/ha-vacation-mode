@@ -50,6 +50,20 @@
       }
     }
   },
+  "services": {
+    "refresh": {
+      "name": "Aktualisieren",
+      "description": "Ruft alle Datenquellen erneut ab und ignoriert dabei die zwischengespeicherten Ergebnisse. Ohne Ziel werden alle Urlaubsmodus-Einträge aktualisiert."
+    }
+  },
+  "exceptions": {
+    "no_loaded_entry": {
+      "message": "Es ist kein Urlaubsmodus-Eintrag geladen."
+    },
+    "no_target_match": {
+      "message": "Das gewählte Ziel gehört zu keinem geladenen Urlaubsmodus-Eintrag."
+    }
+  },
   "entity": {
     "sensor": {
       "distance_home": { "name": "Entfernung von zu Hause" },

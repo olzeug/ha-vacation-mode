@@ -233,6 +233,13 @@ class VacationModeCoordinator(DataUpdateCoordinator[VacationModeData]):
 
     # -- update -------------------------------------------------------------
 
+    async def async_force_refresh(self) -> None:
+        """Refetch every source, ignoring the cached results and their TTLs."""
+        _LOGGER.debug("Forced refresh, dropping %d cached results", len(self._cache))
+        self._cache.clear()
+        self._geocoded_at = None
+        await self.async_refresh()
+
     async def _async_update_data(self) -> VacationModeData:
         """Fetch every enabled source for the current location."""
         location = self._current_location() or self._last_location
