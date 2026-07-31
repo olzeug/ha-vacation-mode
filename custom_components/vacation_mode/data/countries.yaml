@@ -1,0 +1,939 @@
+# Static country facts used by the Vacation Mode integration.
+#
+# Sources
+#   emergency  : Wikipedia, "List of emergency telephone numbers"
+#                https://en.wikipedia.org/wiki/List_of_emergency_telephone_numbers
+#   plugs      : IEC World Plugs / worldstandards.eu, "Plug, socket & voltage by country"
+#                https://www.worldstandards.eu/electricity/plug-voltage-by-country/
+#   voltage    : same source as `plugs`
+#   tap_water  : CDC Yellow Book, "Water Disinfection" country guidance, and the
+#                WHO/UNICEF Joint Monitoring Programme drinking water service levels
+#                https://wwwnc.cdc.gov/travel/yellowbook  https://washdata.org/
+#   currency   : ISO 4217
+#
+# Schema (all keys required except `iso3`, `voltage`, `frequency`)
+#   <ISO 3166-1 alpha-2>:
+#     name_en / name_de : country name
+#     iso3              : ISO 3166-1 alpha-3, used to match Foreign Office advisories
+#     currency          : ISO 4217 code, used for the exchange rate sensor
+#     emergency         : mapping with the keys general, police, ambulance, fire
+#     plugs             : list of IEC plug type letters
+#     voltage           : mains voltage in volts
+#     frequency         : mains frequency in hertz
+#     tap_water         : safe | caution | unsafe
+#
+# `tap_water` is a coarse country level hint, not a guarantee for a specific tap.
+# To add a country, copy any block below and keep the keys in the same order.
+
+DE:
+  name_en: Germany
+  name_de: Deutschland
+  iso3: DEU
+  currency: EUR
+  emergency: {general: "112", police: "110", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+AT:
+  name_en: Austria
+  name_de: Österreich
+  iso3: AUT
+  currency: EUR
+  emergency: {general: "112", police: "133", ambulance: "144", fire: "122"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+CH:
+  name_en: Switzerland
+  name_de: Schweiz
+  iso3: CHE
+  currency: CHF
+  emergency: {general: "112", police: "117", ambulance: "144", fire: "118"}
+  plugs: [C, J]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+FR:
+  name_en: France
+  name_de: Frankreich
+  iso3: FRA
+  currency: EUR
+  emergency: {general: "112", police: "17", ambulance: "15", fire: "18"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+IT:
+  name_en: Italy
+  name_de: Italien
+  iso3: ITA
+  currency: EUR
+  emergency: {general: "112", police: "113", ambulance: "118", fire: "115"}
+  plugs: [C, F, L]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+ES:
+  name_en: Spain
+  name_de: Spanien
+  iso3: ESP
+  currency: EUR
+  emergency: {general: "112", police: "091", ambulance: "061", fire: "080"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+PT:
+  name_en: Portugal
+  name_de: Portugal
+  iso3: PRT
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+NL:
+  name_en: Netherlands
+  name_de: Niederlande
+  iso3: NLD
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+BE:
+  name_en: Belgium
+  name_de: Belgien
+  iso3: BEL
+  currency: EUR
+  emergency: {general: "112", police: "101", ambulance: "112", fire: "112"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+LU:
+  name_en: Luxembourg
+  name_de: Luxemburg
+  iso3: LUX
+  currency: EUR
+  emergency: {general: "112", police: "113", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+DK:
+  name_en: Denmark
+  name_de: Dänemark
+  iso3: DNK
+  currency: DKK
+  emergency: {general: "112", police: "114", ambulance: "112", fire: "112"}
+  plugs: [C, E, F, K]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+SE:
+  name_en: Sweden
+  name_de: Schweden
+  iso3: SWE
+  currency: SEK
+  emergency: {general: "112", police: "114 14", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+NO:
+  name_en: Norway
+  name_de: Norwegen
+  iso3: NOR
+  currency: NOK
+  emergency: {general: "112", police: "112", ambulance: "113", fire: "110"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+FI:
+  name_en: Finland
+  name_de: Finnland
+  iso3: FIN
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+IS:
+  name_en: Iceland
+  name_de: Island
+  iso3: ISL
+  currency: ISK
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+IE:
+  name_en: Ireland
+  name_de: Irland
+  iso3: IRL
+  currency: EUR
+  emergency: {general: "112", police: "999", ambulance: "999", fire: "999"}
+  plugs: [G]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+GB:
+  name_en: United Kingdom
+  name_de: Vereinigtes Königreich
+  iso3: GBR
+  currency: GBP
+  emergency: {general: "999", police: "999", ambulance: "999", fire: "999"}
+  plugs: [G]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+PL:
+  name_en: Poland
+  name_de: Polen
+  iso3: POL
+  currency: PLN
+  emergency: {general: "112", police: "997", ambulance: "999", fire: "998"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+CZ:
+  name_en: Czechia
+  name_de: Tschechien
+  iso3: CZE
+  currency: CZK
+  emergency: {general: "112", police: "158", ambulance: "155", fire: "150"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+SK:
+  name_en: Slovakia
+  name_de: Slowakei
+  iso3: SVK
+  currency: EUR
+  emergency: {general: "112", police: "158", ambulance: "155", fire: "150"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+HU:
+  name_en: Hungary
+  name_de: Ungarn
+  iso3: HUN
+  currency: HUF
+  emergency: {general: "112", police: "107", ambulance: "104", fire: "105"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+SI:
+  name_en: Slovenia
+  name_de: Slowenien
+  iso3: SVN
+  currency: EUR
+  emergency: {general: "112", police: "113", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+HR:
+  name_en: Croatia
+  name_de: Kroatien
+  iso3: HRV
+  currency: EUR
+  emergency: {general: "112", police: "192", ambulance: "194", fire: "193"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+GR:
+  name_en: Greece
+  name_de: Griechenland
+  iso3: GRC
+  currency: EUR
+  emergency: {general: "112", police: "100", ambulance: "166", fire: "199"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+BG:
+  name_en: Bulgaria
+  name_de: Bulgarien
+  iso3: BGR
+  currency: BGN
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+RO:
+  name_en: Romania
+  name_de: Rumänien
+  iso3: ROU
+  currency: RON
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+TR:
+  name_en: Türkiye
+  name_de: Türkei
+  iso3: TUR
+  currency: TRY
+  emergency: {general: "112", police: "155", ambulance: "112", fire: "110"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+CY:
+  name_en: Cyprus
+  name_de: Zypern
+  iso3: CYP
+  currency: EUR
+  emergency: {general: "112", police: "199", ambulance: "199", fire: "199"}
+  plugs: [G]
+  voltage: 240
+  frequency: 50
+  tap_water: caution
+
+MT:
+  name_en: Malta
+  name_de: Malta
+  iso3: MLT
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [G]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+EE:
+  name_en: Estonia
+  name_de: Estland
+  iso3: EST
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+LV:
+  name_en: Latvia
+  name_de: Lettland
+  iso3: LVA
+  currency: EUR
+  emergency: {general: "112", police: "110", ambulance: "113", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+LT:
+  name_en: Lithuania
+  name_de: Litauen
+  iso3: LTU
+  currency: EUR
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+RS:
+  name_en: Serbia
+  name_de: Serbien
+  iso3: SRB
+  currency: RSD
+  emergency: {general: "112", police: "192", ambulance: "194", fire: "193"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+ME:
+  name_en: Montenegro
+  name_de: Montenegro
+  iso3: MNE
+  currency: EUR
+  emergency: {general: "112", police: "122", ambulance: "124", fire: "123"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+AL:
+  name_en: Albania
+  name_de: Albanien
+  iso3: ALB
+  currency: ALL
+  emergency: {general: "112", police: "129", ambulance: "127", fire: "128"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+MK:
+  name_en: North Macedonia
+  name_de: Nordmazedonien
+  iso3: MKD
+  currency: MKD
+  emergency: {general: "112", police: "192", ambulance: "194", fire: "193"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+BA:
+  name_en: Bosnia and Herzegovina
+  name_de: Bosnien und Herzegowina
+  iso3: BIH
+  currency: BAM
+  emergency: {general: "112", police: "122", ambulance: "124", fire: "123"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+US:
+  name_en: United States
+  name_de: Vereinigte Staaten
+  iso3: USA
+  currency: USD
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B]
+  voltage: 120
+  frequency: 60
+  tap_water: safe
+
+CA:
+  name_en: Canada
+  name_de: Kanada
+  iso3: CAN
+  currency: CAD
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B]
+  voltage: 120
+  frequency: 60
+  tap_water: safe
+
+MX:
+  name_en: Mexico
+  name_de: Mexiko
+  iso3: MEX
+  currency: MXN
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B]
+  voltage: 127
+  frequency: 60
+  tap_water: unsafe
+
+BR:
+  name_en: Brazil
+  name_de: Brasilien
+  iso3: BRA
+  currency: BRL
+  emergency: {general: "190", police: "190", ambulance: "192", fire: "193"}
+  plugs: [C, N]
+  voltage: 127
+  frequency: 60
+  tap_water: unsafe
+
+AR:
+  name_en: Argentina
+  name_de: Argentinien
+  iso3: ARG
+  currency: ARS
+  emergency: {general: "911", police: "911", ambulance: "107", fire: "100"}
+  plugs: [C, I]
+  voltage: 220
+  frequency: 50
+  tap_water: caution
+
+CL:
+  name_en: Chile
+  name_de: Chile
+  iso3: CHL
+  currency: CLP
+  emergency: {general: "133", police: "133", ambulance: "131", fire: "132"}
+  plugs: [C, L]
+  voltage: 220
+  frequency: 50
+  tap_water: safe
+
+PE:
+  name_en: Peru
+  name_de: Peru
+  iso3: PER
+  currency: PEN
+  emergency: {general: "105", police: "105", ambulance: "106", fire: "116"}
+  plugs: [A, B, C]
+  voltage: 220
+  frequency: 60
+  tap_water: unsafe
+
+CO:
+  name_en: Colombia
+  name_de: Kolumbien
+  iso3: COL
+  currency: COP
+  emergency: {general: "123", police: "123", ambulance: "125", fire: "119"}
+  plugs: [A, B]
+  voltage: 110
+  frequency: 60
+  tap_water: caution
+
+CR:
+  name_en: Costa Rica
+  name_de: Costa Rica
+  iso3: CRI
+  currency: CRC
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B]
+  voltage: 120
+  frequency: 60
+  tap_water: caution
+
+CU:
+  name_en: Cuba
+  name_de: Kuba
+  iso3: CUB
+  currency: CUP
+  emergency: {general: "106", police: "106", ambulance: "104", fire: "105"}
+  plugs: [A, B, C, L]
+  voltage: 110
+  frequency: 60
+  tap_water: unsafe
+
+DO:
+  name_en: Dominican Republic
+  name_de: Dominikanische Republik
+  iso3: DOM
+  currency: DOP
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B, C]
+  voltage: 110
+  frequency: 60
+  tap_water: unsafe
+
+JM:
+  name_en: Jamaica
+  name_de: Jamaika
+  iso3: JAM
+  currency: JMD
+  emergency: {general: "119", police: "119", ambulance: "110", fire: "110"}
+  plugs: [A, B]
+  voltage: 110
+  frequency: 50
+  tap_water: caution
+
+TH:
+  name_en: Thailand
+  name_de: Thailand
+  iso3: THA
+  currency: THB
+  emergency: {general: "191", police: "191", ambulance: "1669", fire: "199"}
+  plugs: [A, B, C, O]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+VN:
+  name_en: Vietnam
+  name_de: Vietnam
+  iso3: VNM
+  currency: VND
+  emergency: {general: "113", police: "113", ambulance: "115", fire: "114"}
+  plugs: [A, C, F]
+  voltage: 220
+  frequency: 50
+  tap_water: unsafe
+
+ID:
+  name_en: Indonesia
+  name_de: Indonesien
+  iso3: IDN
+  currency: IDR
+  emergency: {general: "112", police: "110", ambulance: "118", fire: "113"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+MY:
+  name_en: Malaysia
+  name_de: Malaysia
+  iso3: MYS
+  currency: MYR
+  emergency: {general: "999", police: "999", ambulance: "999", fire: "994"}
+  plugs: [G]
+  voltage: 240
+  frequency: 50
+  tap_water: caution
+
+SG:
+  name_en: Singapore
+  name_de: Singapur
+  iso3: SGP
+  currency: SGD
+  emergency: {general: "999", police: "999", ambulance: "995", fire: "995"}
+  plugs: [G]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+PH:
+  name_en: Philippines
+  name_de: Philippinen
+  iso3: PHL
+  currency: PHP
+  emergency: {general: "911", police: "911", ambulance: "911", fire: "911"}
+  plugs: [A, B, C]
+  voltage: 220
+  frequency: 60
+  tap_water: unsafe
+
+IN:
+  name_en: India
+  name_de: Indien
+  iso3: IND
+  currency: INR
+  emergency: {general: "112", police: "100", ambulance: "102", fire: "101"}
+  plugs: [C, D, M]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+LK:
+  name_en: Sri Lanka
+  name_de: Sri Lanka
+  iso3: LKA
+  currency: LKR
+  emergency: {general: "119", police: "119", ambulance: "1990", fire: "110"}
+  plugs: [D, G, M]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+NP:
+  name_en: Nepal
+  name_de: Nepal
+  iso3: NPL
+  currency: NPR
+  emergency: {general: "100", police: "100", ambulance: "102", fire: "101"}
+  plugs: [C, D, M]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+CN:
+  name_en: China
+  name_de: China
+  iso3: CHN
+  currency: CNY
+  emergency: {general: "110", police: "110", ambulance: "120", fire: "119"}
+  plugs: [A, C, I]
+  voltage: 220
+  frequency: 50
+  tap_water: unsafe
+
+JP:
+  name_en: Japan
+  name_de: Japan
+  iso3: JPN
+  currency: JPY
+  emergency: {general: "110", police: "110", ambulance: "119", fire: "119"}
+  plugs: [A, B]
+  voltage: 100
+  frequency: 50
+  tap_water: safe
+
+KR:
+  name_en: South Korea
+  name_de: Südkorea
+  iso3: KOR
+  currency: KRW
+  emergency: {general: "112", police: "112", ambulance: "119", fire: "119"}
+  plugs: [C, F]
+  voltage: 220
+  frequency: 60
+  tap_water: safe
+
+TW:
+  name_en: Taiwan
+  name_de: Taiwan
+  iso3: TWN
+  currency: TWD
+  emergency: {general: "110", police: "110", ambulance: "119", fire: "119"}
+  plugs: [A, B]
+  voltage: 110
+  frequency: 60
+  tap_water: caution
+
+HK:
+  name_en: Hong Kong
+  name_de: Hongkong
+  iso3: HKG
+  currency: HKD
+  emergency: {general: "999", police: "999", ambulance: "999", fire: "999"}
+  plugs: [G]
+  voltage: 220
+  frequency: 50
+  tap_water: safe
+
+AE:
+  name_en: United Arab Emirates
+  name_de: Vereinigte Arabische Emirate
+  iso3: ARE
+  currency: AED
+  emergency: {general: "999", police: "999", ambulance: "998", fire: "997"}
+  plugs: [C, D, G]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+SA:
+  name_en: Saudi Arabia
+  name_de: Saudi-Arabien
+  iso3: SAU
+  currency: SAR
+  emergency: {general: "911", police: "999", ambulance: "997", fire: "998"}
+  plugs: [A, B, C, G]
+  voltage: 230
+  frequency: 60
+  tap_water: caution
+
+QA:
+  name_en: Qatar
+  name_de: Katar
+  iso3: QAT
+  currency: QAR
+  emergency: {general: "999", police: "999", ambulance: "999", fire: "999"}
+  plugs: [D, G]
+  voltage: 240
+  frequency: 50
+  tap_water: safe
+
+IL:
+  name_en: Israel
+  name_de: Israel
+  iso3: ISR
+  currency: ILS
+  emergency: {general: "100", police: "100", ambulance: "101", fire: "102"}
+  plugs: [C, H, M]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+EG:
+  name_en: Egypt
+  name_de: Ägypten
+  iso3: EGY
+  currency: EGP
+  emergency: {general: "122", police: "122", ambulance: "123", fire: "180"}
+  plugs: [C, F]
+  voltage: 220
+  frequency: 50
+  tap_water: unsafe
+
+MA:
+  name_en: Morocco
+  name_de: Marokko
+  iso3: MAR
+  currency: MAD
+  emergency: {general: "190", police: "190", ambulance: "150", fire: "150"}
+  plugs: [C, E]
+  voltage: 220
+  frequency: 50
+  tap_water: unsafe
+
+TN:
+  name_en: Tunisia
+  name_de: Tunesien
+  iso3: TUN
+  currency: TND
+  emergency: {general: "197", police: "197", ambulance: "190", fire: "198"}
+  plugs: [C, E]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+ZA:
+  name_en: South Africa
+  name_de: Südafrika
+  iso3: ZAF
+  currency: ZAR
+  emergency: {general: "112", police: "10111", ambulance: "10177", fire: "10177"}
+  plugs: [C, D, M, N]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+KE:
+  name_en: Kenya
+  name_de: Kenia
+  iso3: KEN
+  currency: KES
+  emergency: {general: "999", police: "999", ambulance: "999", fire: "999"}
+  plugs: [G]
+  voltage: 240
+  frequency: 50
+  tap_water: unsafe
+
+TZ:
+  name_en: Tanzania
+  name_de: Tansania
+  iso3: TZA
+  currency: TZS
+  emergency: {general: "112", police: "112", ambulance: "114", fire: "114"}
+  plugs: [D, G]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+NA:
+  name_en: Namibia
+  name_de: Namibia
+  iso3: NAM
+  currency: NAD
+  emergency: {general: "10111", police: "10111", ambulance: "2032276", fire: "2032270"}
+  plugs: [D, M, N]
+  voltage: 220
+  frequency: 50
+  tap_water: caution
+
+AU:
+  name_en: Australia
+  name_de: Australien
+  iso3: AUS
+  currency: AUD
+  emergency: {general: "000", police: "000", ambulance: "000", fire: "000"}
+  plugs: [I]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+NZ:
+  name_en: New Zealand
+  name_de: Neuseeland
+  iso3: NZL
+  currency: NZD
+  emergency: {general: "111", police: "111", ambulance: "111", fire: "111"}
+  plugs: [I]
+  voltage: 230
+  frequency: 50
+  tap_water: safe
+
+FJ:
+  name_en: Fiji
+  name_de: Fidschi
+  iso3: FJI
+  currency: FJD
+  emergency: {general: "911", police: "917", ambulance: "911", fire: "910"}
+  plugs: [I]
+  voltage: 240
+  frequency: 50
+  tap_water: caution
+
+MV:
+  name_en: Maldives
+  name_de: Malediven
+  iso3: MDV
+  currency: MVR
+  emergency: {general: "119", police: "119", ambulance: "102", fire: "118"}
+  plugs: [D, G]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+MU:
+  name_en: Mauritius
+  name_de: Mauritius
+  iso3: MUS
+  currency: MUR
+  emergency: {general: "999", police: "999", ambulance: "114", fire: "115"}
+  plugs: [C, G]
+  voltage: 230
+  frequency: 50
+  tap_water: caution
+
+SC:
+  name_en: Seychelles
+  name_de: Seychellen
+  iso3: SYC
+  currency: SCR
+  emergency: {general: "999", police: "999", ambulance: "151", fire: "999"}
+  plugs: [G]
+  voltage: 240
+  frequency: 50
+  tap_water: caution
+
+RU:
+  name_en: Russia
+  name_de: Russland
+  iso3: RUS
+  currency: RUB
+  emergency: {general: "112", police: "102", ambulance: "103", fire: "101"}
+  plugs: [C, F]
+  voltage: 220
+  frequency: 50
+  tap_water: unsafe
+
+UA:
+  name_en: Ukraine
+  name_de: Ukraine
+  iso3: UKR
+  currency: UAH
+  emergency: {general: "112", police: "102", ambulance: "103", fire: "101"}
+  plugs: [C, F]
+  voltage: 230
+  frequency: 50
+  tap_water: unsafe
+
+GE:
+  name_en: Georgia
+  name_de: Georgien
+  iso3: GEO
+  currency: GEL
+  emergency: {general: "112", police: "112", ambulance: "112", fire: "112"}
+  plugs: [C, F]
+  voltage: 220
+  frequency: 50
+  tap_water: caution

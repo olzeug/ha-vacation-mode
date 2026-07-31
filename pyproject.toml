@@ -1,0 +1,19 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+norecursedirs = [".git", ".venv"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "D", "ASYNC"]
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["custom_components", "tests"]
+force-sort-within-sections = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D100", "D103", "D104"]

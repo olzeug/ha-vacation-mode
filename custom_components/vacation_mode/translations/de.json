@@ -1,0 +1,90 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Urlaubsmodus",
+        "description": "Wähle die Person, deren Standort den Kontext für alle Sensoren liefert.",
+        "data": {
+          "person_entity": "Person oder Geräte-Tracker",
+          "home_currency": "Heimatwährung"
+        },
+        "data_description": {
+          "person_entity": "Standortänderungen dieser Entität steuern alle Module.",
+          "home_currency": "ISO-4217-Code, von dem aus der Wechselkurs berechnet wird, z. B. EUR."
+        }
+      },
+      "modules": {
+        "title": "Module",
+        "description": "Schalte aus, was du nicht brauchst. Deaktivierte Module werden nie abgefragt.",
+        "data": {
+          "weather": "Wetter und Vorhersage",
+          "air_quality": "Luftqualität und Pollen",
+          "marine": "Wassertemperatur und Wellen",
+          "holidays": "Feiertage",
+          "currency": "Wechselkurs",
+          "travel_advice": "Sicherheitshinweise (Auswärtiges Amt)",
+          "earthquakes": "Erdbeben in der Umgebung",
+          "country_info": "Länderinfos (Notruf, Steckertyp, Leitungswasser)"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Diese Person wird bereits getrackt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Urlaubsmodus",
+        "data": {
+          "home_currency": "Heimatwährung",
+          "weather": "Wetter und Vorhersage",
+          "air_quality": "Luftqualität und Pollen",
+          "marine": "Wassertemperatur und Wellen",
+          "holidays": "Feiertage",
+          "currency": "Wechselkurs",
+          "travel_advice": "Sicherheitshinweise (Auswärtiges Amt)",
+          "earthquakes": "Erdbeben in der Umgebung",
+          "country_info": "Länderinfos (Notruf, Steckertyp, Leitungswasser)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "distance_home": { "name": "Entfernung von zu Hause" },
+      "country": { "name": "Land" },
+      "apparent_temperature": { "name": "Gefühlte Temperatur" },
+      "temperature_max": { "name": "Höchsttemperatur heute" },
+      "uv_index": { "name": "UV-Index" },
+      "sunrise": { "name": "Sonnenaufgang" },
+      "sunset": { "name": "Sonnenuntergang" },
+      "time_difference": { "name": "Zeitverschiebung" },
+      "air_quality_index": { "name": "Luftqualitätsindex" },
+      "pollen": { "name": "Pollenflug" },
+      "water_temperature": { "name": "Wassertemperatur" },
+      "wave_height": { "name": "Wellenhöhe" },
+      "next_holiday": { "name": "Nächster Feiertag" },
+      "next_holiday_date": { "name": "Nächster Feiertag am" },
+      "exchange_rate": { "name": "Wechselkurs" },
+      "travel_advisory": {
+        "name": "Sicherheitshinweis",
+        "state": {
+          "none": "Kein Hinweis",
+          "situation_notice": "Lagehinweis",
+          "partial_travel_warning": "Teilreisewarnung",
+          "travel_warning": "Reisewarnung"
+        }
+      },
+      "earthquake_count": { "name": "Erdbeben (7 Tage)" },
+      "earthquake_magnitude": { "name": "Stärkstes Erdbeben" },
+      "emergency_number": { "name": "Notrufnummer" },
+      "plug_type": { "name": "Steckertyp" }
+    },
+    "binary_sensor": {
+      "holiday_today": { "name": "Heute Feiertag" },
+      "tap_water": { "name": "Leitungswasser" },
+      "travel_warning": { "name": "Reisewarnung" }
+    }
+  }
+}

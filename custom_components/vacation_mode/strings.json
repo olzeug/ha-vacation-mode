@@ -1,0 +1,90 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vacation Mode",
+        "description": "Choose the person whose location provides the context for all sensors.",
+        "data": {
+          "person_entity": "Person or device tracker",
+          "home_currency": "Home currency"
+        },
+        "data_description": {
+          "person_entity": "Location updates of this entity drive every module.",
+          "home_currency": "ISO 4217 code the exchange rate is calculated from, for example EUR."
+        }
+      },
+      "modules": {
+        "title": "Modules",
+        "description": "Turn off what you do not need. Disabled modules are never queried.",
+        "data": {
+          "weather": "Weather and forecast",
+          "air_quality": "Air quality and pollen",
+          "marine": "Water temperature and waves",
+          "holidays": "Public holidays",
+          "currency": "Exchange rate",
+          "travel_advice": "Travel advisory (German Federal Foreign Office)",
+          "earthquakes": "Earthquakes nearby",
+          "country_info": "Country facts (emergency number, plug, tap water)"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "This person is already being tracked."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Vacation Mode",
+        "data": {
+          "home_currency": "Home currency",
+          "weather": "Weather and forecast",
+          "air_quality": "Air quality and pollen",
+          "marine": "Water temperature and waves",
+          "holidays": "Public holidays",
+          "currency": "Exchange rate",
+          "travel_advice": "Travel advisory (German Federal Foreign Office)",
+          "earthquakes": "Earthquakes nearby",
+          "country_info": "Country facts (emergency number, plug, tap water)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "distance_home": { "name": "Distance from home" },
+      "country": { "name": "Country" },
+      "apparent_temperature": { "name": "Feels like" },
+      "temperature_max": { "name": "Maximum temperature today" },
+      "uv_index": { "name": "UV index" },
+      "sunrise": { "name": "Sunrise" },
+      "sunset": { "name": "Sunset" },
+      "time_difference": { "name": "Time difference" },
+      "air_quality_index": { "name": "Air quality index" },
+      "pollen": { "name": "Pollen" },
+      "water_temperature": { "name": "Water temperature" },
+      "wave_height": { "name": "Wave height" },
+      "next_holiday": { "name": "Next public holiday" },
+      "next_holiday_date": { "name": "Next public holiday on" },
+      "exchange_rate": { "name": "Exchange rate" },
+      "travel_advisory": {
+        "name": "Travel advisory",
+        "state": {
+          "none": "No advisory",
+          "situation_notice": "Situation notice",
+          "partial_travel_warning": "Partial travel warning",
+          "travel_warning": "Travel warning"
+        }
+      },
+      "earthquake_count": { "name": "Earthquakes (7 days)" },
+      "earthquake_magnitude": { "name": "Strongest earthquake" },
+      "emergency_number": { "name": "Emergency number" },
+      "plug_type": { "name": "Plug type" }
+    },
+    "binary_sensor": {
+      "holiday_today": { "name": "Public holiday today" },
+      "tap_water": { "name": "Tap water" },
+      "travel_warning": { "name": "Travel warning" }
+    }
+  }
+}

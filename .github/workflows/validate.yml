@@ -1,0 +1,44 @@
+name: Validate
+
+# Hassfest and HACS validate against upstream rules that change without any
+# commit in this repository, so these checks also run on a schedule.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Validate the integration manifest
+        uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Validate the repository structure
+        uses: hacs/action@main
+        with:
+          category: integration
+          # This integration is not part of the home-assistant/brands
+          # repository, so the brands check cannot pass yet.
+          ignore: brands

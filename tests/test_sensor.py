@@ -1,0 +1,101 @@
+"""Tests for the Vacation Mode sensor platforms."""
+
+from __future__ import annotations
+
+from homeassistant.const import STATE_OFF, STATE_ON
+from homeassistant.core import HomeAssistant
+import pytest
+
+PREFIX = "vacation_mode_traveller"
+
+
+@pytest.mark.usefixtures("setup_integration")
+async def test_weather_sensors(hass: HomeAssistant) -> None:
+    """Values taken from the Open-Meteo forecast."""
+    temperature = hass.states.get(f"sensor.{PREFIX}_temperature")
+    assert temperature is not None
+    assert temperature.state == "29.4"
+    assert temperature.attributes["device_class"] == "temperature"
+    assert temperature.attributes["unit_of_measurement"] == "°C"
+
+    assert hass.states.get(f"sensor.{PREFIX}_feels_like").state == "35.1"
+    assert hass.states.get(f"sensor.{PREFIX}_uv_index").state == "7.35"
+    assert hass.states.get(f"sensor.{PREFIX}_maximum_temperature_today").state == "31.2"
+
+    # Open-Meteo returns local timestamps, the sensor exposes them in UTC.
+    sunrise = hass.states.get(f"sensor.{PREFIX}_sunrise")
+    assert sunrise.state == "2026-07-30T23:14:00+00:00"
+
+    difference = hass.states.get(f"sensor.{PREFIX}_time_difference")
+    assert difference.attributes["timezone"] == "Asia/Bangkok"
+    assert difference.attributes["utc_offset_seconds"] == 25200
+
+
+@pytest.mark.usefixtures("setup_integration")
+async def test_context_sensors(hass: HomeAssistant) -> None:
+    """Values derived from the country and the remaining sources."""
+    country = hass.states.get(f"sensor.{PREFIX}_country")
+    assert country.state == "Thailand"
+    assert country.attributes["country_code"] == "TH"
+    assert country.attributes["city"] == "Phuket"
+
+    distance = hass.states.get(f"sensor.{PREFIX}_distance_from_home")
+    assert float(distance.state) == pytest.approx(9200, abs=500)
+
+    rate = hass.states.get(f"sensor.{PREFIX}_exchange_rate")
+    assert float(rate.state) == pytest.approx(37.842)
+    assert rate.attributes["base_currency"] == "EUR"
+    assert rate.attributes["local_currency"] == "THB"
+
+    emergency = hass.states.get(f"sensor.{PREFIX}_emergency_number")
+    assert emergency.state == "191"
+    assert emergency.attributes["ambulance"] == "1669"
+
+    assert hass.states.get(f"sensor.{PREFIX}_plug_type").state == "A, B, C, O"
+
+    advisory = hass.states.get(f"sensor.{PREFIX}_travel_advisory")
+    assert advisory.state == "situation_notice"
+    assert advisory.attributes["summary"].startswith("Aktuelles: Vor Reisen")
+    assert advisory.attributes["url"].endswith("/ReiseUndSicherheit/236302")
+
+    quakes = hass.states.get(f"sensor.{PREFIX}_earthquakes_7_days")
+    assert quakes.state == "2"
+    assert hass.states.get(f"sensor.{PREFIX}_strongest_earthquake").state == "4.6"
+
+    holiday = hass.states.get(f"sensor.{PREFIX}_next_public_holiday")
+    assert holiday.state == "วันแม่แห่งชาติ"
+    assert holiday.attributes["date"] == "2026-08-12"
+    assert holiday.attributes["days_until"] == 12
+
+    holiday_date = hass.states.get(f"sensor.{PREFIX}_next_public_holiday_on")
+    assert holiday_date.state == "2026-08-12"
+    assert holiday_date.attributes["device_class"] == "date"
+    assert holiday_date.attributes["days_until"] == 12
+
+
+@pytest.mark.usefixtures("setup_integration")
+async def test_marine_sensors(hass: HomeAssistant) -> None:
+    """Coastal locations expose water temperature and waves."""
+    assert hass.states.get(f"sensor.{PREFIX}_water_temperature").state == "29.8"
+    waves = hass.states.get(f"sensor.{PREFIX}_wave_height")
+    assert waves.state == "1.24"
+    assert waves.attributes["wave_period"] == 7.2
+
+
+@pytest.mark.usefixtures("setup_integration")
+async def test_binary_sensors(hass: HomeAssistant) -> None:
+    """Country facts and the travel advisory as a yes/no verdict."""
+    tap_water = hass.states.get(f"binary_sensor.{PREFIX}_tap_water")
+    assert tap_water.state == STATE_ON
+    assert tap_water.attributes["rating"] == "unsafe"
+
+    warning = hass.states.get(f"binary_sensor.{PREFIX}_travel_warning")
+    assert warning.state == STATE_ON
+    assert warning.attributes["level"] == "situation_notice"
+    assert warning.attributes["summary"].startswith("Aktuelles: Vor Reisen")
+    assert warning.attributes["url"].endswith("/ReiseUndSicherheit/236302")
+
+    assert (
+        hass.states.get(f"binary_sensor.{PREFIX}_public_holiday_today").state
+        == STATE_OFF
+    )

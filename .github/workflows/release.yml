@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish the HACS asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Take the version from the tag
+        id: version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          jq --arg version "$version" '.version = $version' \
+            custom_components/vacation_mode/manifest.json > manifest.tmp
+          mv manifest.tmp custom_components/vacation_mode/manifest.json
+
+      - name: Build the release archive
+        run: |
+          cd custom_components/vacation_mode
+          zip -r ../../vacation_mode.zip . -x '*__pycache__*'
+
+      - name: Attach the archive to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: vacation_mode.zip
