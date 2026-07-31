@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone, tzinfo
 import logging
 from typing import Any
 
@@ -231,6 +231,17 @@ class VacationModeCoordinator(DataUpdateCoordinator[VacationModeData]):
             self._geocoded_at = (latitude, longitude)
         return place
 
+    async def _async_destination_tz(self, data: VacationModeData) -> tzinfo | None:
+        """Resolve the timezone of the destination reported by the forecast."""
+        if data.weather is None:
+            return None
+        if data.weather.timezone and (
+            resolved := await dt_util.async_get_time_zone(data.weather.timezone)
+        ):
+            return resolved
+        # Unknown timezone name: a fixed offset still gives the correct clock.
+        return timezone(timedelta(seconds=data.weather.utc_offset_seconds))
+
     # -- update -------------------------------------------------------------
 
     async def async_force_refresh(self) -> None:
@@ -323,6 +334,8 @@ class VacationModeCoordinator(DataUpdateCoordinator[VacationModeData]):
             results = await asyncio.gather(*tasks.values())
             for name, result in zip(tasks, results, strict=True):
                 setattr(data, name, result)
+
+        data.destination_tz = await self._async_destination_tz(data)
 
         if not modules.get(MODULE_COUNTRY_INFO):
             data.country = None

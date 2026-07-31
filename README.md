@@ -33,6 +33,7 @@ The entity name is prefixed with the device name, e.g.
 | `sensor.*_temperature`, `_feels_like`, `_maximum_temperature_today` | Weather | Open-Meteo |
 | `sensor.*_humidity`, `_pressure`¹, `_wind_speed`, `_precipitation` | Weather | Open-Meteo |
 | `sensor.*_uv_index`, `_sunrise`, `_sunset`, `_time_difference` | Weather | Open-Meteo |
+| `sensor.*_local_time` (`HH:MM` at the destination, updated every minute) | Weather | Open-Meteo |
 | `sensor.*_air_quality_index`, `_pm2_5`, `_pm10`, `_ozone`¹, `_nitrogen_dioxide`¹ | Air quality | Open-Meteo Air Quality |
 | `sensor.*_pollen` (highest of six pollen types, all in the attributes) | Air quality | Open-Meteo Air Quality |
 | `sensor.*_water_temperature`, `_wave_height` | Marine | Open-Meteo Marine |
@@ -49,6 +50,10 @@ The entity name is prefixed with the device name, e.g.
 
 Marine data only exists near a coast. Inland the module simply reports no data
 instead of failing.
+
+The local time sensor keeps ticking between the polls and renames itself after
+the current destination, e.g. **Local time Phuket**. Its entity ID stays
+`sensor.*_local_time` regardless of where the traveller is.
 
 ## Installation
 

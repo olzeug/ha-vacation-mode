@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+from freezegun.api import FrozenDateTimeFactory
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant
 import pytest
+from pytest_homeassistant_custom_component.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+)
 
 PREFIX = "vacation_mode_traveller"
 
@@ -29,6 +34,53 @@ async def test_weather_sensors(hass: HomeAssistant) -> None:
     difference = hass.states.get(f"sensor.{PREFIX}_time_difference")
     assert difference.attributes["timezone"] == "Asia/Bangkok"
     assert difference.attributes["utc_offset_seconds"] == 25200
+
+
+@pytest.mark.usefixtures("setup_integration")
+async def test_local_time_sensor(
+    hass: HomeAssistant, freezer: FrozenDateTimeFactory
+) -> None:
+    """The clock of the destination ticks on its own, once a minute."""
+    entity_id = f"sensor.{PREFIX}_local_time"
+
+    state = hass.states.get(entity_id)
+    assert state is not None
+    assert state.attributes["timezone"] == "Asia/Bangkok"
+    # The name follows the place the traveller is in.
+    assert state.attributes["friendly_name"].endswith("Local time Phuket")
+
+    freezer.move_to("2026-07-31T12:35:00+00:00")
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(entity_id)
+    assert state.state == "19:35"
+    assert state.attributes["date"] == "2026-07-31"
+    assert state.attributes["utc_offset"] == "+0700"
+    assert state.attributes["location"] == "Phuket"
+
+    # A minute later without any coordinator refresh.
+    freezer.move_to("2026-07-31T12:36:00+00:00")
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done()
+
+    assert hass.states.get(entity_id).state == "19:36"
+
+
+async def test_local_time_name_follows_the_traveller(
+    hass: HomeAssistant, setup_integration: MockConfigEntry
+) -> None:
+    """Moving on renames the clock, the entity ID stays put."""
+    entity_id = f"sensor.{PREFIX}_local_time"
+    coordinator = setup_integration.runtime_data
+
+    coordinator.data.place.city = "Chiang Mai"
+    coordinator.async_update_listeners()
+    await hass.async_block_till_done()
+
+    state = hass.states.get(entity_id)
+    assert state.attributes["friendly_name"].endswith("Local time Chiang Mai")
+    assert state.attributes["location"] == "Chiang Mai"
 
 
 @pytest.mark.usefixtures("setup_integration")

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, tzinfo
 from typing import Any
 
 
@@ -120,6 +120,9 @@ class VacationModeData:
     place: Place | None = None
     country: CountryInfo | None = None
     weather: WeatherData | None = None
+    # Timezone of the destination, resolved once per update so the entities
+    # never have to load it from disk inside the event loop.
+    destination_tz: tzinfo | None = None
     air_quality: dict[str, float | None] | None = None
     marine: dict[str, float | None] | None = None
     holidays: HolidayInfo | None = None

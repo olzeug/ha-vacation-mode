@@ -74,6 +74,7 @@
       "sunrise": { "name": "Sonnenaufgang" },
       "sunset": { "name": "Sonnenuntergang" },
       "time_difference": { "name": "Zeitverschiebung" },
+      "local_time": { "name": "Ortszeit {location}" },
       "air_quality_index": { "name": "Luftqualitätsindex" },
       "pollen": { "name": "Pollenflug" },
       "water_temperature": { "name": "Wassertemperatur" },

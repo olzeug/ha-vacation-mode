@@ -23,9 +23,10 @@ from homeassistant.const import (
     UnitOfTemperature,
     UnitOfTime,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.typing import StateType
+from homeassistant.helpers.event import async_track_utc_time_change
+from homeassistant.helpers.typing import StateType, UndefinedType
 from homeassistant.util import dt as dt_util
 
 from .const import (
@@ -52,6 +53,8 @@ POLLEN_FIELDS = (
     "ragweed_pollen",
 )
 POLLEN_UNIT = "grains/m³"
+
+LOCAL_TIME_FORMAT = "%H:%M"
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -111,13 +114,31 @@ def _local_time_attributes(data: VacationModeData) -> Mapping[str, Any] | None:
     """Timezone details of the destination."""
     if data.weather is None:
         return None
-    tzinfo = dt_util.get_time_zone(data.weather.timezone or "UTC")
-    now = dt_util.utcnow().astimezone(tzinfo) if tzinfo else None
+    now = _destination_now(data)
     return {
         "timezone": data.weather.timezone,
         "utc_offset_seconds": data.weather.utc_offset_seconds,
-        "local_time": now.strftime("%H:%M") if now else None,
+        "local_time": now.strftime(LOCAL_TIME_FORMAT) if now else None,
     }
+
+
+def _destination_now(data: VacationModeData) -> datetime | None:
+    """Return the current wall clock time at the destination."""
+    if data.destination_tz is None:
+        return None
+    return dt_util.utcnow().astimezone(data.destination_tz)
+
+
+def _location_label(data: VacationModeData) -> str:
+    """Shortest name identifying where the traveller currently is."""
+    if data.place is not None:
+        for candidate in (data.place.city, data.place.state, data.place.country):
+            if candidate:
+                return candidate
+    if data.weather is not None and data.weather.timezone:
+        # "Asia/Bangkok" -> "Bangkok"
+        return data.weather.timezone.rsplit("/", 1)[-1].replace("_", " ")
+    return ""
 
 
 def _next_holiday_attributes(data: VacationModeData) -> Mapping[str, Any] | None:
@@ -533,11 +554,15 @@ async def async_setup_entry(
     """Set up the sensors for the enabled modules."""
     coordinator = entry.runtime_data
     modules = coordinator.modules
-    async_add_entities(
+    entities: list[SensorEntity] = [
         VacationModeSensor(coordinator, description)
         for description in SENSORS
         if description.module is None or modules.get(description.module)
-    )
+    ]
+    # The timezone of the destination comes with the forecast.
+    if modules.get(MODULE_WEATHER):
+        entities.append(VacationModeLocalTimeSensor(coordinator))
+    async_add_entities(entities)
 
 
 class VacationModeSensor(VacationModeEntity, SensorEntity):
@@ -572,3 +597,86 @@ class VacationModeSensor(VacationModeEntity, SensorEntity):
         if self.entity_description.attributes_fn is None:
             return None
         return self.entity_description.attributes_fn(self.coordinator.data)
+
+
+class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
+    """The wall clock time at the destination, ticking once a minute."""
+
+    _attr_translation_key = "local_time"
+    _attr_icon = "mdi:clock-time-four-outline"
+
+    def __init__(self, coordinator: VacationModeCoordinator) -> None:
+        """Initialise the sensor with the current destination in its name."""
+        super().__init__(coordinator, "local_time")
+        self._attr_translation_placeholders = {
+            "location": _location_label(coordinator.data)
+        }
+
+    @property
+    def name(self) -> str | UndefinedType | None:
+        """Return the translated name including the current destination.
+
+        ``Entity.name`` memoises its result in the instance dict, which would
+        freeze the name at the place the traveller was in when the entity was
+        created. Dropping the memoised value applies the placeholder of the
+        latest update. Without a known destination the placeholder is empty,
+        hence the strip.
+        """
+        self.__dict__.pop("name", None)
+        name = super().name
+        return name.strip() if isinstance(name, str) else name
+
+    @property
+    def suggested_object_id(self) -> str | None:
+        """Keep the destination out of the entity ID, it belongs in the name only.
+
+        The default implementation derives the object ID from the name, which
+        would bake the first destination into the entity ID forever.
+        """
+        return "Local time"
+
+    @property
+    def available(self) -> bool:
+        """Return whether the forecast delivered a timezone."""
+        return super().available and self.coordinator.data.destination_tz is not None
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the current time at the destination."""
+        if (now := _destination_now(self.coordinator.data)) is None:
+            return None
+        return now.strftime(LOCAL_TIME_FORMAT)
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        """Return the date and the timezone behind the clock."""
+        data = self.coordinator.data
+        if (now := _destination_now(data)) is None:
+            return None
+        return {
+            "location": _location_label(data),
+            "timezone": data.weather.timezone if data.weather else None,
+            "utc_offset": now.strftime("%z"),
+            "date": now.date().isoformat(),
+            "datetime": now.isoformat(),
+        }
+
+    async def async_added_to_hass(self) -> None:
+        """Start ticking with the wall clock."""
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            async_track_utc_time_change(self.hass, self._handle_minute, second=0)
+        )
+
+    @callback
+    def _handle_minute(self, now: datetime) -> None:
+        """Publish the new minute."""
+        self.async_write_ha_state()
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Follow the traveller: refresh the name before writing the state."""
+        self._attr_translation_placeholders = {
+            "location": _location_label(self.coordinator.data)
+        }
+        super()._handle_coordinator_update()

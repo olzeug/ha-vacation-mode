@@ -72,6 +72,12 @@ def test_binary_sensor_translation_keys_exist(translation_key: str) -> None:
     assert "name" in STRINGS["entity"]["binary_sensor"][translation_key]
 
 
+def test_local_time_name_has_a_location_placeholder() -> None:
+    """The clock names itself after the destination in every language."""
+    for document in (STRINGS, GERMAN):
+        assert "{location}" in document["entity"]["sensor"]["local_time"]["name"]
+
+
 def test_advisory_states_are_translated() -> None:
     """The enum sensor translates all of its options."""
     states = STRINGS["entity"]["sensor"]["travel_advisory"]["state"]
