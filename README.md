@@ -26,18 +26,19 @@ integration is fully translated into English and German.
 
 ## Screenshots
 
-<!--
-  images/entities-overview.png and images/dashboard-example.png are still
-  missing — see the two screenshots described below to complete this section.
--->
-
 <p align="center">
   <img src="images/config-flow-person.png" alt="Config flow: choose the tracked person" width="45%">
   <img src="images/config-flow-modules.png" alt="Config flow: enable modules" width="45%">
 </p>
 <p align="center">
+  <em>Setup steps 1 and 2: pick the person or device tracker to follow, then choose which modules to enable.</em>
+</p>
+<p align="center">
   <img src="images/entities-overview.png" alt="Entities created for a traveller" width="45%">
   <img src="images/dashboard-example.png" alt="Example dashboard card" width="45%">
+</p>
+<p align="center">
+  <em>Some of the entities the integration creates, and an example of how they can be used on a dashboard.</em>
 </p>
 
 ## Highlights
