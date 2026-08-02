@@ -5,7 +5,9 @@ from __future__ import annotations
 import asyncio
 from datetime import UTC, date, datetime, timedelta, timezone
 import html
+import json
 import logging
+from pathlib import Path
 import re
 from typing import Any
 
@@ -47,7 +49,21 @@ TRAVEL_ADVICE_URL = "https://www.auswaertiges-amt.de/opendata/travelwarning"
 TRAVEL_ADVICE_PAGE_URL = "https://www.auswaertiges-amt.de/de/ReiseUndSicherheit"
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
 
-USER_AGENT = "ha-vacation-mode/0.4.0 (+https://github.com/olzeug/ha-vacation-mode)"
+
+def _get_integration_version() -> str:
+    """Read the version from manifest.json so it never drifts out of sync."""
+    manifest_path = Path(__file__).parent / "manifest.json"
+    try:
+        with manifest_path.open(encoding="utf-8") as manifest_file:
+            return json.load(manifest_file)["version"]
+    except (OSError, KeyError, json.JSONDecodeError):
+        return "unknown"
+
+
+USER_AGENT = (
+    f"ha-vacation-mode/{_get_integration_version()} "
+    "(+https://github.com/olzeug/ha-vacation-mode)"
+)
 
 CURRENT_FIELDS = (
     "temperature_2m",
