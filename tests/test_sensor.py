@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import date, timedelta
 from zoneinfo import ZoneInfo
 
 from freezegun.api import FrozenDateTimeFactory
@@ -128,15 +128,21 @@ async def test_context_sensors(hass: HomeAssistant) -> None:
     assert quakes.state == "2"
     assert hass.states.get(f"sensor.{PREFIX}_strongest_earthquake").state == "4.6"
 
+    # The payload fixture pins the holiday to a fixed calendar date, but
+    # "days_until" is computed against the real clock, so it drifts by one
+    # every day the suite is run on. Compare against the same formula the
+    # sensor itself uses instead of a number that goes stale.
+    expected_days_until = (date(2026, 8, 12) - dt_util.now().date()).days
+
     holiday = hass.states.get(f"sensor.{PREFIX}_next_public_holiday")
     assert holiday.state == "วันแม่แห่งชาติ"
     assert holiday.attributes["date"] == "2026-08-12"
-    assert holiday.attributes["days_until"] == 12
+    assert holiday.attributes["days_until"] == expected_days_until
 
     holiday_date = hass.states.get(f"sensor.{PREFIX}_next_public_holiday_on")
     assert holiday_date.state == "2026-08-12"
     assert holiday_date.attributes["device_class"] == "date"
-    assert holiday_date.attributes["days_until"] == 12
+    assert holiday_date.attributes["days_until"] == expected_days_until
 
 
 @pytest.mark.usefixtures("setup_integration")
