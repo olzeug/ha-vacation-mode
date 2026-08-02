@@ -68,9 +68,7 @@
     "sensor": {
       "distance_home": { "name": "Distance from home" },
       "country": { "name": "Country" },
-      "apparent_temperature": { "name": "Feels like" },
       "temperature_max": { "name": "Maximum temperature today" },
-      "uv_index": { "name": "UV index" },
       "sunrise": { "name": "Sunrise" },
       "sunset": { "name": "Sunset" },
       "time_difference": { "name": "Time difference" },
@@ -80,7 +78,6 @@
       "water_temperature": { "name": "Water temperature" },
       "wave_height": { "name": "Wave height" },
       "next_holiday": { "name": "Next public holiday" },
-      "next_holiday_date": { "name": "Next public holiday on" },
       "exchange_rate": { "name": "Exchange rate" },
       "travel_advisory": {
         "name": "Travel advisory",
@@ -92,7 +89,6 @@
         }
       },
       "earthquake_count": { "name": "Earthquakes (7 days)" },
-      "earthquake_magnitude": { "name": "Strongest earthquake" },
       "emergency_number": { "name": "Emergency number" },
       "plug_type": { "name": "Plug type" }
     },

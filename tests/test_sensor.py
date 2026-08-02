@@ -21,15 +21,12 @@ DESTINATION_TZ = ZoneInfo("Asia/Bangkok")
 
 @pytest.mark.usefixtures("setup_integration")
 async def test_weather_sensors(hass: HomeAssistant) -> None:
-    """Values taken from the Open-Meteo forecast."""
-    temperature = hass.states.get(f"sensor.{PREFIX}_temperature")
-    assert temperature is not None
-    assert temperature.state == "29.4"
-    assert temperature.attributes["device_class"] == "temperature"
-    assert temperature.attributes["unit_of_measurement"] == "°C"
+    """Values taken from the Open-Meteo forecast.
 
-    assert hass.states.get(f"sensor.{PREFIX}_feels_like").state == "35.1"
-    assert hass.states.get(f"sensor.{PREFIX}_uv_index").state == "7.35"
+    Current temperature, apparent temperature, humidity, pressure, wind
+    speed and UV index are only exposed via the weather entity (see
+    test_weather.py) to avoid duplicate entities.
+    """
     assert hass.states.get(f"sensor.{PREFIX}_maximum_temperature_today").state == "31.2"
 
     # Open-Meteo returns local timestamps, the sensor exposes them in UTC.
@@ -126,7 +123,8 @@ async def test_context_sensors(hass: HomeAssistant) -> None:
 
     quakes = hass.states.get(f"sensor.{PREFIX}_earthquakes_7_days")
     assert quakes.state == "2"
-    assert hass.states.get(f"sensor.{PREFIX}_strongest_earthquake").state == "4.6"
+    # The strongest earthquake is the first (highest-magnitude) event.
+    assert quakes.attributes["events"][0]["magnitude"] == 4.6
 
     # The payload fixture pins the holiday to a fixed calendar date, but
     # "days_until" is computed against the real clock, so it drifts by one
@@ -138,11 +136,6 @@ async def test_context_sensors(hass: HomeAssistant) -> None:
     assert holiday.state == "วันแม่แห่งชาติ"
     assert holiday.attributes["date"] == "2026-08-12"
     assert holiday.attributes["days_until"] == expected_days_until
-
-    holiday_date = hass.states.get(f"sensor.{PREFIX}_next_public_holiday_on")
-    assert holiday_date.state == "2026-08-12"
-    assert holiday_date.attributes["device_class"] == "date"
-    assert holiday_date.attributes["days_until"] == expected_days_until
 
 
 @pytest.mark.usefixtures("setup_integration")

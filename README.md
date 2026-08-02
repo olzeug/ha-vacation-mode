@@ -102,28 +102,30 @@ Everything except the tracked person can be changed later through
 ## What it creates
 
 Entity IDs are prefixed with the device name, e.g.
-`sensor.vacation_mode_traveller_temperature`.
+`sensor.vacation_mode_traveller_maximum_temperature_today`.
 
 <details>
 <summary>Full entity reference</summary>
 
+Current temperature, apparent temperature, humidity, pressure, wind speed
+and UV index are available as attributes on the `weather.*` entity.
+
 | Entity | Module | Source |
 | --- | --- | --- |
 | `weather.*` (current + 7 day daily and hourly forecast) | Weather | Open-Meteo |
-| `sensor.*_temperature`, `_feels_like`, `_maximum_temperature_today` | Weather | Open-Meteo |
-| `sensor.*_humidity`, `_pressure`¹, `_wind_speed`, `_precipitation` | Weather | Open-Meteo |
-| `sensor.*_uv_index`, `_sunrise`, `_sunset`, `_time_difference` | Weather | Open-Meteo |
+| `sensor.*_maximum_temperature_today`, `_precipitation` | Weather | Open-Meteo |
+| `sensor.*_sunrise`, `_sunset`, `_time_difference` | Weather | Open-Meteo |
 | `sensor.*_local_time` (`HH:MM` at the destination, updated every minute) | Weather | Open-Meteo |
 | `sensor.*_air_quality_index`, `_pm2_5`, `_pm10`, `_ozone`¹, `_nitrogen_dioxide`¹ | Air quality | Open-Meteo Air Quality |
 | `sensor.*_pollen` (highest of six pollen types, all in the attributes) | Air quality | Open-Meteo Air Quality |
 | `sensor.*_water_temperature`, `_wave_height` | Marine | Open-Meteo Marine |
 | `sensor.*_country` (city, region and coordinates in the attributes) | always on | Nominatim |
 | `sensor.*_distance_from_home` | always on | `zone.home`, no network access |
-| `sensor.*_next_public_holiday`, `_next_public_holiday_on` (date, days until) | Holidays | Nager.Date |
+| `sensor.*_next_public_holiday` (date, days until in the attributes) | Holidays | Nager.Date |
 | `binary_sensor.*_public_holiday_today` | Holidays | Nager.Date |
 | `sensor.*_exchange_rate` | Currency | ExchangeRate-API |
 | `sensor.*_travel_advisory`, `binary_sensor.*_travel_warning` (summary and link in the attributes) | Travel advisory | Auswärtiges Amt |
-| `sensor.*_earthquakes_7_days`, `_strongest_earthquake` | Earthquakes | USGS |
+| `sensor.*_earthquakes_7_days` (strongest event is `events[0]` in the attributes) | Earthquakes | USGS |
 | `sensor.*_emergency_number`, `_plug_type`, `binary_sensor.*_tap_water` | Country facts | bundled data file |
 
 ¹ Disabled by default, enable it in the entity settings if you need it.

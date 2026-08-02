@@ -82,7 +82,12 @@ async def test_partial_failure_keeps_other_sources(
     assert data.weather.current["temperature_2m"] == 29.4
     assert data.currency is not None
     assert data.earthquakes is not None
-    assert hass.states.get("sensor.vacation_mode_traveller_temperature").state == "29.4"
+    assert (
+        hass.states.get("weather.vacation_mode_traveller_weather").attributes[
+            "temperature"
+        ]
+        == 29.4
+    )
     assert (
         hass.states.get("sensor.vacation_mode_traveller_pm2_5").state == "unavailable"
     )
