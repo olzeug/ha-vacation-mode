@@ -19,7 +19,7 @@ from homeassistant.const import (
 from homeassistant.core import Event, EventStateChangedData, HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.event import async_track_state_change_event
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util import dt as dt_util
 from homeassistant.util.location import distance as location_distance
 
@@ -255,7 +255,12 @@ class VacationModeCoordinator(DataUpdateCoordinator[VacationModeData]):
         """Fetch every enabled source for the current location."""
         location = self._current_location() or self._last_location
         if location is None:
-            raise UpdateFailed(f"No coordinates available for {self.person_entity_id}")
+            _LOGGER.warning(
+                "No coordinates available yet for %s; entities will be "
+                "unavailable until a location is reported",
+                self.person_entity_id,
+            )
+            return VacationModeData()
 
         latitude, longitude = location
         errors: dict[str, str] = {}
