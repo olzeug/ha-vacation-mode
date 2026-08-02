@@ -9,7 +9,7 @@ import pytest
 
 from custom_components.vacation_mode.weather import to_condition
 
-ENTITY_ID = "weather.vacation_mode_traveller"
+ENTITY_ID = "weather.vacation_mode_traveller_weather"
 
 
 @pytest.mark.usefixtures("setup_integration")

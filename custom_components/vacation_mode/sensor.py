@@ -15,11 +15,8 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import (
     CONCENTRATION_MICROGRAMS_PER_CUBIC_METER,
-    PERCENTAGE,
     UnitOfLength,
     UnitOfPrecipitationDepth,
-    UnitOfPressure,
-    UnitOfSpeed,
     UnitOfTemperature,
     UnitOfTime,
 )
@@ -41,7 +38,7 @@ from .const import (
     MODULE_WEATHER,
 )
 from .coordinator import VacationModeConfigEntry, VacationModeCoordinator
-from .entity import VacationModeEntity
+from .entity import VacationModeEntity, location_label
 from .models import VacationModeData
 
 POLLEN_FIELDS = (
@@ -129,18 +126,6 @@ def _destination_now(data: VacationModeData) -> datetime | None:
     return dt_util.utcnow().astimezone(data.destination_tz)
 
 
-def _location_label(data: VacationModeData) -> str:
-    """Shortest name identifying where the traveller currently is."""
-    if data.place is not None:
-        for candidate in (data.place.city, data.place.state, data.place.country):
-            if candidate:
-                return candidate
-    if data.weather is not None and data.weather.timezone:
-        # "Asia/Bangkok" -> "Bangkok"
-        return data.weather.timezone.rsplit("/", 1)[-1].replace("_", " ")
-    return ""
-
-
 def _next_holiday_attributes(data: VacationModeData) -> Mapping[str, Any] | None:
     """Date, weekday and remaining days of the upcoming public holiday."""
     if data.holidays is None or data.holidays.next is None:
@@ -191,27 +176,9 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
         ),
     ),
     # -- weather ----------------------------------------------------------
-    VacationModeSensorDescription(
-        key="temperature",
-        module=MODULE_WEATHER,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda data: _current(data, "temperature_2m"),
-        available_fn=lambda data: data.weather is not None,
-    ),
-    VacationModeSensorDescription(
-        key="apparent_temperature",
-        translation_key="apparent_temperature",
-        module=MODULE_WEATHER,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda data: _current(data, "apparent_temperature"),
-        available_fn=lambda data: data.weather is not None,
-    ),
+    # temperature, apparent_temperature, humidity, pressure, wind_speed and
+    # uv_index are already exposed as attributes of the weather entity; only
+    # values without an equivalent there get their own sensor.
     VacationModeSensorDescription(
         key="temperature_max",
         translation_key="temperature_max",
@@ -223,36 +190,6 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
         available_fn=lambda data: data.weather is not None,
     ),
     VacationModeSensorDescription(
-        key="humidity",
-        module=MODULE_WEATHER,
-        device_class=SensorDeviceClass.HUMIDITY,
-        native_unit_of_measurement=PERCENTAGE,
-        state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda data: _current(data, "relative_humidity_2m"),
-        available_fn=lambda data: data.weather is not None,
-    ),
-    VacationModeSensorDescription(
-        key="pressure",
-        module=MODULE_WEATHER,
-        device_class=SensorDeviceClass.ATMOSPHERIC_PRESSURE,
-        native_unit_of_measurement=UnitOfPressure.HPA,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=0,
-        entity_registry_enabled_default=False,
-        value_fn=lambda data: _current(data, "pressure_msl"),
-        available_fn=lambda data: data.weather is not None,
-    ),
-    VacationModeSensorDescription(
-        key="wind_speed",
-        module=MODULE_WEATHER,
-        device_class=SensorDeviceClass.WIND_SPEED,
-        native_unit_of_measurement=UnitOfSpeed.KILOMETERS_PER_HOUR,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=0,
-        value_fn=lambda data: _current(data, "wind_speed_10m"),
-        available_fn=lambda data: data.weather is not None,
-    ),
-    VacationModeSensorDescription(
         key="precipitation",
         module=MODULE_WEATHER,
         device_class=SensorDeviceClass.PRECIPITATION,
@@ -260,16 +197,6 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
         value_fn=lambda data: _current(data, "precipitation"),
-        available_fn=lambda data: data.weather is not None,
-    ),
-    VacationModeSensorDescription(
-        key="uv_index",
-        translation_key="uv_index",
-        module=MODULE_WEATHER,
-        native_unit_of_measurement="UV index",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda data: _current(data, "uv_index"),
         available_fn=lambda data: data.weather is not None,
     ),
     VacationModeSensorDescription(
@@ -404,17 +331,6 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
         available_fn=lambda data: data.holidays is not None,
         attributes_fn=_next_holiday_attributes,
     ),
-    VacationModeSensorDescription(
-        key="next_holiday_date",
-        translation_key="next_holiday_date",
-        module=MODULE_HOLIDAYS,
-        device_class=SensorDeviceClass.DATE,
-        value_fn=lambda data: (
-            data.holidays.next.day if data.holidays and data.holidays.next else None
-        ),
-        available_fn=lambda data: data.holidays is not None,
-        attributes_fn=_next_holiday_attributes,
-    ),
     # -- currency ---------------------------------------------------------
     VacationModeSensorDescription(
         key="exchange_rate",
@@ -483,30 +399,6 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
                 ]
             }
             if data.earthquakes
-            else None
-        ),
-    ),
-    VacationModeSensorDescription(
-        key="earthquake_magnitude",
-        translation_key="earthquake_magnitude",
-        module=MODULE_EARTHQUAKES,
-        suggested_display_precision=1,
-        value_fn=lambda data: (
-            data.earthquakes.strongest.magnitude
-            if data.earthquakes and data.earthquakes.strongest
-            else None
-        ),
-        available_fn=lambda data: data.earthquakes is not None,
-        attributes_fn=lambda data: (
-            {
-                "place": data.earthquakes.strongest.place,
-                "time": data.earthquakes.strongest.time.isoformat()
-                if data.earthquakes.strongest.time
-                else None,
-                "distance_km": data.earthquakes.strongest.distance_km,
-                "url": data.earthquakes.strongest.url,
-            }
-            if data.earthquakes and data.earthquakes.strongest
             else None
         ),
     ),
@@ -609,7 +501,7 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
         """Initialise the sensor with the current destination in its name."""
         super().__init__(coordinator, "local_time")
         self._attr_translation_placeholders = {
-            "location": _location_label(coordinator.data)
+            "location": location_label(coordinator.data)
         }
 
     @property
@@ -654,7 +546,7 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
         if (now := _destination_now(data)) is None:
             return None
         return {
-            "location": _location_label(data),
+            "location": location_label(data),
             "timezone": data.weather.timezone if data.weather else None,
             "utc_offset": now.strftime("%z"),
             "date": now.date().isoformat(),
@@ -677,6 +569,6 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Follow the traveller: refresh the name before writing the state."""
         self._attr_translation_placeholders = {
-            "location": _location_label(self.coordinator.data)
+            "location": location_label(self.coordinator.data)
         }
         super()._handle_coordinator_update()

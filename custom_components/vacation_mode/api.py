@@ -47,7 +47,7 @@ TRAVEL_ADVICE_URL = "https://www.auswaertiges-amt.de/opendata/travelwarning"
 TRAVEL_ADVICE_PAGE_URL = "https://www.auswaertiges-amt.de/de/ReiseUndSicherheit"
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
 
-USER_AGENT = "ha-vacation-mode/0.3.0 (+https://github.com/olzeug/ha-vacation-mode)"
+USER_AGENT = "ha-vacation-mode/0.4.0 (+https://github.com/olzeug/ha-vacation-mode)"
 
 CURRENT_FIELDS = (
     "temperature_2m",

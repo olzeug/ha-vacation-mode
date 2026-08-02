@@ -7,6 +7,19 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, MANUFACTURER
 from .coordinator import VacationModeCoordinator
+from .models import VacationModeData
+
+
+def location_label(data: VacationModeData) -> str:
+    """Shortest name identifying where the traveller currently is."""
+    if data.place is not None:
+        for candidate in (data.place.city, data.place.state, data.place.country):
+            if candidate:
+                return candidate
+    if data.weather is not None and data.weather.timezone:
+        # "Asia/Bangkok" -> "Bangkok"
+        return data.weather.timezone.rsplit("/", 1)[-1].replace("_", " ")
+    return ""
 
 
 class VacationModeEntity(CoordinatorEntity[VacationModeCoordinator]):

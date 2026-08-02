@@ -82,7 +82,12 @@ async def test_partial_failure_keeps_other_sources(
     assert data.weather.current["temperature_2m"] == 29.4
     assert data.currency is not None
     assert data.earthquakes is not None
-    assert hass.states.get("sensor.vacation_mode_traveller_temperature").state == "29.4"
+    assert (
+        hass.states.get("weather.vacation_mode_traveller_weather").attributes[
+            "temperature"
+        ]
+        == 29.4
+    )
     assert (
         hass.states.get("sensor.vacation_mode_traveller_pm2_5").state == "unavailable"
     )
@@ -154,18 +159,23 @@ async def test_geocoding_failure_leaves_country_modules_empty(
     assert data.earthquakes is not None
 
 
-async def test_setup_retries_without_coordinates(
+async def test_setup_succeeds_without_coordinates(
     hass: HomeAssistant,
     mock_sources: aioresponses,
     config_entry: MockConfigEntry,
 ) -> None:
-    """A person without coordinates is the only reason to fail the update."""
+    """A person without coordinates yet must not block setup of the entry."""
     hass.states.async_set(PERSON_ENTITY, "unknown", {})
     config_entry.add_to_hass(hass)
     await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
 
-    assert config_entry.state is ConfigEntryState.SETUP_RETRY
+    assert config_entry.state is ConfigEntryState.LOADED
+    data = config_entry.runtime_data.data
+    assert data.latitude is None
+    assert data.longitude is None
+    assert data.place is None
+    assert data.weather is None
 
 
 @pytest.mark.usefixtures("setup_integration")
