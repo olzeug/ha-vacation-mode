@@ -100,6 +100,9 @@
       "holiday_today": { "name": "Heute Feiertag" },
       "tap_water": { "name": "Leitungswasser" },
       "travel_warning": { "name": "Reisewarnung" }
+    },
+    "weather": {
+      "weather": { "name": "Wetter {location}" }
     }
   }
 }

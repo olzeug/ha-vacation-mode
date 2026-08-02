@@ -41,7 +41,7 @@ from .const import (
     MODULE_WEATHER,
 )
 from .coordinator import VacationModeConfigEntry, VacationModeCoordinator
-from .entity import VacationModeEntity
+from .entity import VacationModeEntity, location_label
 from .models import VacationModeData
 
 POLLEN_FIELDS = (
@@ -127,18 +127,6 @@ def _destination_now(data: VacationModeData) -> datetime | None:
     if data.destination_tz is None:
         return None
     return dt_util.utcnow().astimezone(data.destination_tz)
-
-
-def _location_label(data: VacationModeData) -> str:
-    """Shortest name identifying where the traveller currently is."""
-    if data.place is not None:
-        for candidate in (data.place.city, data.place.state, data.place.country):
-            if candidate:
-                return candidate
-    if data.weather is not None and data.weather.timezone:
-        # "Asia/Bangkok" -> "Bangkok"
-        return data.weather.timezone.rsplit("/", 1)[-1].replace("_", " ")
-    return ""
 
 
 def _next_holiday_attributes(data: VacationModeData) -> Mapping[str, Any] | None:
@@ -609,7 +597,7 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
         """Initialise the sensor with the current destination in its name."""
         super().__init__(coordinator, "local_time")
         self._attr_translation_placeholders = {
-            "location": _location_label(coordinator.data)
+            "location": location_label(coordinator.data)
         }
 
     @property
@@ -654,7 +642,7 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
         if (now := _destination_now(data)) is None:
             return None
         return {
-            "location": _location_label(data),
+            "location": location_label(data),
             "timezone": data.weather.timezone if data.weather else None,
             "utc_offset": now.strftime("%z"),
             "date": now.date().isoformat(),
@@ -677,6 +665,6 @@ class VacationModeLocalTimeSensor(VacationModeEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Follow the traveller: refresh the name before writing the state."""
         self._attr_translation_placeholders = {
-            "location": _location_label(self.coordinator.data)
+            "location": location_label(self.coordinator.data)
         }
         super()._handle_coordinator_update()

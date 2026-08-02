@@ -26,12 +26,13 @@ from homeassistant.const import (
     UnitOfSpeed,
     UnitOfTemperature,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.typing import UndefinedType
 
 from .const import MODULE_WEATHER
 from .coordinator import VacationModeConfigEntry, VacationModeCoordinator
-from .entity import VacationModeEntity
+from .entity import VacationModeEntity, location_label
 
 # WMO 4677 weather codes as used by Open-Meteo.
 CONDITION_MAP: dict[int, str] = {
@@ -104,7 +105,7 @@ async def async_setup_entry(
 class VacationModeWeather(VacationModeEntity, WeatherEntity):
     """Current conditions and forecast at the tracked person's location."""
 
-    _attr_name = None
+    _attr_translation_key = "weather"
     _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_native_wind_speed_unit = UnitOfSpeed.KILOMETERS_PER_HOUR
     _attr_native_pressure_unit = UnitOfPressure.HPA
@@ -114,8 +115,42 @@ class VacationModeWeather(VacationModeEntity, WeatherEntity):
     )
 
     def __init__(self, coordinator: VacationModeCoordinator) -> None:
-        """Initialise the weather entity."""
+        """Initialise the weather entity with the current destination in its name."""
         super().__init__(coordinator, "weather")
+        self._attr_translation_placeholders = {
+            "location": location_label(coordinator.data)
+        }
+
+    @property
+    def name(self) -> str | UndefinedType | None:
+        """Return the translated name including the current destination.
+
+        ``Entity.name`` memoises its result in the instance dict, which would
+        freeze the name at the place the traveller was in when the entity was
+        created. Dropping the memoised value applies the placeholder of the
+        latest update. Without a known destination the placeholder is empty,
+        hence the strip.
+        """
+        self.__dict__.pop("name", None)
+        name = super().name
+        return name.strip() if isinstance(name, str) else name
+
+    @property
+    def suggested_object_id(self) -> str | None:
+        """Keep the destination out of the entity ID, it belongs in the name only.
+
+        The default implementation derives the object ID from the name, which
+        would bake the first destination into the entity ID forever.
+        """
+        return "Weather"
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Follow the traveller: refresh the name before writing the state."""
+        self._attr_translation_placeholders = {
+            "location": location_label(self.coordinator.data)
+        }
+        super()._handle_coordinator_update()
 
     @property
     def available(self) -> bool:
