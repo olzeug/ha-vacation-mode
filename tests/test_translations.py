@@ -82,6 +82,12 @@ def test_local_time_name_has_a_location_placeholder() -> None:
         assert "{location}" in document["entity"]["sensor"]["local_time"]["name"]
 
 
+def test_weather_name_has_a_location_placeholder() -> None:
+    """The weather entity names itself after the destination in every language."""
+    for document in (STRINGS, GERMAN):
+        assert "{location}" in document["entity"]["weather"]["weather"]["name"]
+
+
 def test_advisory_states_are_translated() -> None:
     """The enum sensor translates all of its options."""
     states = STRINGS["entity"]["sensor"]["travel_advisory"]["state"]
@@ -99,9 +105,7 @@ async def _setup_and_collect_names(
 
     The device name is stripped from the front of every ``friendly_name`` so
     the result can be compared directly against the translation documents.
-    Only entities whose unique_id is in ``unique_ids`` are collected; the
-    weather entity has no entity name of its own (has_entity_name with no
-    translation_key) and would otherwise be swept up here for nothing.
+    Only entities whose unique_id is in ``unique_ids`` are collected.
     """
     hass.config.language = language
     config_entry.add_to_hass(hass)
@@ -150,6 +154,7 @@ async def test_entity_names_resolve_per_language(
         if description.translation_key
     }
     unique_ids.add(f"{config_entry.entry_id}_local_time")
+    unique_ids.add(f"{config_entry.entry_id}_weather")
 
     names = await _setup_and_collect_names(
         hass, mock_sources, config_entry, language, unique_ids
@@ -174,3 +179,7 @@ async def test_entity_names_resolve_per_language(
     local_time_template = document["entity"]["sensor"]["local_time"]["name"]
     expected_local_time = local_time_template.format(location="Phuket")
     assert names[f"{config_entry.entry_id}_local_time"] == expected_local_time
+
+    weather_template = document["entity"]["weather"]["weather"]["name"]
+    expected_weather = weather_template.format(location="Phuket")
+    assert names[f"{config_entry.entry_id}_weather"] == expected_weather

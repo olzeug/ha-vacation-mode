@@ -45,8 +45,9 @@ integration is fully translated into English and German.
 - **Zero setup cost** — no API keys, no accounts, no cost. Point it at a
   `person` and go.
 - **Weather & air quality** — current conditions plus a 7 day forecast, UV
-  index, pollen, sunrise/sunset and a local time sensor that renames itself to
-  the current destination (e.g. *Local time Phuket*).
+  index, pollen, sunrise/sunset. The weather entity and the local time sensor
+  both rename themselves to the current destination (e.g. *Weather Phuket*,
+  *Local time Phuket*).
 - **Official travel advisories** — advisory level, summary and a link to the
   source article from the German Federal Foreign Office.
 - **Country facts** — emergency numbers, plug types, mains voltage and tap
