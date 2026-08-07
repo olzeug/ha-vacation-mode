@@ -2,5 +2,5 @@
 #   python3.13 -m venv .venv && .venv/bin/pip install -r requirements_test.txt
 # pytest-homeassistant-custom-component pulls in Home Assistant itself, so no
 # separate Home Assistant installation or container is required.
-pytest-homeassistant-custom-component==0.13.316
+pytest-homeassistant-custom-component==0.13.351
 aioresponses==0.7.9
