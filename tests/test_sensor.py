@@ -137,6 +137,10 @@ async def test_context_sensors(hass: HomeAssistant) -> None:
     assert holiday.attributes["date"] == "2026-08-12"
     assert holiday.attributes["days_until"] == expected_days_until
 
+    holiday_date = hass.states.get(f"sensor.{PREFIX}_next_public_holiday_date")
+    assert holiday_date.state == "2026-08-12"
+    assert holiday_date.attributes["device_class"] == "date"
+
 
 @pytest.mark.usefixtures("setup_integration")
 async def test_marine_sensors(hass: HomeAssistant) -> None:

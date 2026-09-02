@@ -331,6 +331,16 @@ SENSORS: tuple[VacationModeSensorDescription, ...] = (
         available_fn=lambda data: data.holidays is not None,
         attributes_fn=_next_holiday_attributes,
     ),
+    VacationModeSensorDescription(
+        key="next_holiday_date",
+        translation_key="next_holiday_date",
+        module=MODULE_HOLIDAYS,
+        device_class=SensorDeviceClass.DATE,
+        value_fn=lambda data: (
+            data.holidays.next.day if data.holidays and data.holidays.next else None
+        ),
+        available_fn=lambda data: data.holidays is not None,
+    ),
     # -- currency ---------------------------------------------------------
     VacationModeSensorDescription(
         key="exchange_rate",
