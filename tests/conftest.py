@@ -7,6 +7,7 @@ import re
 from unittest.mock import patch
 
 from aioresponses import aioresponses
+from freezegun.api import FrozenDateTimeFactory
 from homeassistant.core import HomeAssistant
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -73,6 +74,12 @@ def skip_nominatim_throttle() -> Generator[None]:
     """Skip the one request per second pause of the Nominatim client."""
     with patch("custom_components.vacation_mode.api.NOMINATIM_MIN_INTERVAL", 0):
         yield
+
+
+@pytest.fixture(autouse=True)
+def freeze_time(freezer: FrozenDateTimeFactory) -> None:
+    """Pin the clock to 2026-07-30 so canned test payloads stay in the future."""
+    freezer.move_to("2026-07-30T12:00:00Z")
 
 
 def register_sources(

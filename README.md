@@ -123,6 +123,7 @@ and UV index are available as attributes on the `weather.*` entity.
 | `sensor.*_country` (city, region and coordinates in the attributes) | always on | Nominatim |
 | `sensor.*_distance_from_home` | always on | `zone.home`, no network access |
 | `sensor.*_next_public_holiday` (date, days until in the attributes) | Holidays | Nager.Date |
+| `sensor.*_next_public_holiday_date` | Holidays | Nager.Date |
 | `binary_sensor.*_public_holiday_today` | Holidays | Nager.Date |
 | `sensor.*_exchange_rate` | Currency | ExchangeRate-API |
 | `sensor.*_travel_advisory`, `binary_sensor.*_travel_warning` (summary and link in the attributes) | Travel advisory | Auswärtiges Amt |

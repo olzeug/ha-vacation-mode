@@ -78,6 +78,7 @@
       "water_temperature": { "name": "Water temperature" },
       "wave_height": { "name": "Wave height" },
       "next_holiday": { "name": "Next public holiday" },
+      "next_holiday_date": { "name": "Next public holiday date" },
       "exchange_rate": { "name": "Exchange rate" },
       "travel_advisory": {
         "name": "Travel advisory",
